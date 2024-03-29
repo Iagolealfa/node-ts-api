@@ -1,0 +1,7 @@
+CRUD FRASES
+
+POST /phrases - Create new phrases
+GET /phrases - List all phrases
+GET /phrases/123 - Catch informations of one phrase
+PUT /phrases/123 - Update informations of one phrase
+DELETE /phrases/123 - Delete one phrase
