@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { prisma } from "../libs/prisma";
 import { Phrase } from "../services/createPhrases";
+import { listPhrase } from "../services/listPhrase";
+import { upPhrase } from "../services/updatePhrase";
+import { delPhrase } from "../services/delPhrase";
 
 export const ping = (req : Request, res : Response) =>{
     res.json({pong : true})
@@ -22,13 +25,10 @@ export const listPhrases = async(req : Request ,res : Response)=>{
 }
 
 export const listOnePhrase = async(req : Request ,res : Response)=>{
-    let id = parseInt(req.params.id as string)
-    let phrase = await prisma.phrases.findUnique({
-        where: {
-            id
-        }
-    })
+    
+    let phrase = await listPhrase(parseInt(req.params.id as string))
     res.json(phrase)
+    
 }
 
 export const createPhrase = async(req: Request, res: Response) =>{
@@ -43,12 +43,9 @@ export const createPhrase = async(req: Request, res: Response) =>{
 
 export const updatePhrase = async(req: Request, res: Response)=>{
     try{
-        let id = parseInt(req.params.id as string)
+    let id = parseInt(req.params.id as string)
     let {author, txt} = req.body
-    let newPhrase = await prisma.phrases.update({
-        where:{id},
-        data : {author,txt}
-    })
+    let newPhrase = await upPhrase(id,author,txt)
     res.json(newPhrase)
     }catch(error){
         res.json({error : 'Falha ao atualizar frase'})
@@ -58,10 +55,8 @@ export const updatePhrase = async(req: Request, res: Response)=>{
 export const deletePhrase = async(req: Request, res: Response)=>{
     try{
         let id = parseInt(req.params.id as string)
-        const delPhrase = await prisma.phrases.delete({
-            where : {id}
-        })
-        res.json(delPhrase)
+        const Phrase = await delPhrase(id)
+        res.json(Phrase)
     }catch(error){
         res.json({error : "Falha ao deletar frase"})
     }
